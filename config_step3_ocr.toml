@@ -1,0 +1,15 @@
+type = "mbart"
+
+[task]
+denoise_loss_ratio = 0.0
+source_langs = ["br"]
+target_langs = ["fr"]
+strict_langs = false
+
+[tuning]
+batch_size = 64
+learning_rate = 2e-5          # LR encore réduit (3ème étape)
+gradient_clipping = 1.0
+max_input_length = 128
+max_epochs = 10
+warmup_steps = 300

@@ -1,0 +1,15 @@
+type = "mbart"
+
+[task]
+denoise_loss_ratio = 0.0
+source_langs = ["br"]
+target_langs = ["fr"]
+strict_langs = false
+
+[tuning]
+batch_size = 32               # phrases longues → batch plus petit
+learning_rate = 5e-5
+gradient_clipping = 1.0
+max_input_length = 256        # phrases complètes
+max_epochs = 20               # corpus petit → plus d'epochs
+warmup_steps = 200
