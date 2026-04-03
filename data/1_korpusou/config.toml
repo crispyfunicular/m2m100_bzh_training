@@ -1,0 +1,28 @@
+# Architecture seq2seq compatible m2m100 (encoder-decoder Transformer)
+type = "mbart"
+
+[task]
+# Pas de perte de débruitage : entraînement en traduction supervisée pure
+denoise_loss_ratio = 0.0
+# Aucune langue en mode débruitage (cohérent avec ratio = 0.0)
+denoise_langs = []
+# Langue(s) source dans les paires parallèles
+source_langs = ["br"]
+# Langue(s) cible dans les paires parallèles
+target_langs = ["fr"]
+# Tolérant aux tokens de langue inattendus (utile si corpus bruité)
+strict_langs = false
+
+[tuning]
+# Nombre de phrases par batch (réduit car phrases longues)
+batch_size = 32
+# Taux d'apprentissage typique pour fine-tuning de transformer pré-entraîné
+learning_rate = 5e-5
+# Norme maximale du gradient pour éviter les explosions (seq2seq)
+gradient_clipping = 1.0
+# Longueur maximale en tokens d'une phrase source (troncature au-delà)
+max_input_length = 256
+# Corpus petit → plus d'epochs pour compenser
+max_epochs = 20
+# Montée progressive du LR sur N steps pour stabiliser le début
+warmup_steps = 200

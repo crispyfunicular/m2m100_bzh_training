@@ -1,78 +1,73 @@
 #!/usr/bin/env bash
-# train.sh — Pipeline complet de fine-tuning m2m100 en 3 étapes (br↔fr)
+# train.sh — Fine-tuning M2M100 sur un corpus unique (br↔fr)
+#
+# Usage :
+#   bash train.sh <dossier_corpus>
+#
+#   <dossier_corpus>   Dossier contenant config.toml, train.jsonl, dev.jsonl
+#                      Ex : data/1_korpusou
+#
+# Sortie :
+#   output/<nom_du_dossier>/   Modèle fine-tuné + copies de config.toml, train.jsonl, dev.jsonl
 #
 # Prérequis : pip install zeldarose sentencepiece
-#
-# Usage : bash train.sh
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-echo "════════════════════════════════════════════════"
-echo "  Préparation des données"
-echo "════════════════════════════════════════════════"
+# ── Arguments ─────────────────────────────────────────────────────────────────
 
-python3 prepare_kenstur.py
-python3 prepare_termofis.py
-python3 prepare_ocr.py
+if [[ $# -lt 1 ]]; then
+    echo "Usage : bash train.sh <dossier_corpus>"
+    echo "  Ex  : bash train.sh data/1_korpusou"
+    exit 1
+fi
+
+CORPUS_DIR="${1%/}"          # supprime le slash final si présent
+PRETRAINED="facebook/m2m100_418M"
+DATASET_NAME="$(basename "$CORPUS_DIR")"
+OUT_DIR="output/$DATASET_NAME"
+
+# ── Vérifications ─────────────────────────────────────────────────────────────
+
+for required in config.toml train.jsonl dev.jsonl; do
+    if [[ ! -f "$CORPUS_DIR/$required" ]]; then
+        echo "Erreur : fichier manquant — $CORPUS_DIR/$required"
+        exit 1
+    fi
+done
+
+export HF_HOME="/home/mpellissier/.cache/huggingface"
+export TRANSFORMERS_CACHE="/home/mpellissier/.cache/huggingface/hub"
+
+# ── Résumé ────────────────────────────────────────────────────────────────────
 
 echo ""
 echo "════════════════════════════════════════════════"
-echo "  Validation des données"
+echo "  Corpus   : $CORPUS_DIR"
+echo "  Modèle   : $PRETRAINED"
+echo "  Sortie   : $OUT_DIR"
 echo "════════════════════════════════════════════════"
-
-python3 - <<'EOF'
-import json, pathlib
-for step in ['step1_kenstur', 'step2_termofis', 'step3_ocr']:
-    for split in ['train', 'dev']:
-        p = pathlib.Path(f'data/{step}/{split}.jsonl')
-        n = 0
-        for line in p.open():
-            d = json.loads(line)['translation']
-            assert d['br'].strip() and d['fr'].strip(), f"Champ vide dans {step}/{split}"
-            n += 1
-        print(f'  {step}/{split}: {n} lignes OK')
-EOF
-
 echo ""
-echo "════════════════════════════════════════════════"
-echo "  Étape 1 : ARBRES-Kenstur (phrases parallèles)"
-echo "════════════════════════════════════════════════"
+
+# ── Entraînement ──────────────────────────────────────────────────────────────
 
 zeldarose transformer \
     --tokenizer facebook/m2m100_418M \
-    --pretrained-model facebook/m2m100_418M \
-    --config config_step1_kenstur.toml \
-    --out-dir output/step1_kenstur \
-    --val-text data/step1_kenstur/dev.jsonl \
-    data/step1_kenstur/train.jsonl
+    --pretrained-model "$PRETRAINED" \
+    --config "$CORPUS_DIR/config.toml" \
+    --out-dir "$OUT_DIR" \
+    --val-text "$CORPUS_DIR/dev.jsonl" \
+    "$CORPUS_DIR/train.jsonl"
+
+# ── Archive dans le dossier de sortie ─────────────────────────────────────────
+# Copie config + données pour reproductibilité
+
+cp "$CORPUS_DIR/config.toml"  "$OUT_DIR/config.toml"
+cp "$CORPUS_DIR/train.jsonl"  "$OUT_DIR/train.jsonl"
+cp "$CORPUS_DIR/dev.jsonl"    "$OUT_DIR/dev.jsonl"
 
 echo ""
-echo "════════════════════════════════════════════════"
-echo "  Étape 2 : TermOfis (terminologie)"
-echo "════════════════════════════════════════════════"
-
-zeldarose transformer \
-    --tokenizer facebook/m2m100_418M \
-    --pretrained-model output/step1_kenstur \
-    --config config_step2_termofis.toml \
-    --out-dir output/step2_termofis \
-    --val-text data/step2_termofis/dev.jsonl \
-    data/step2_termofis/train.jsonl
-
-echo ""
-echo "════════════════════════════════════════════════"
-echo "  Étape 3 : ocr_pipeline (lexiques historiques)"
-echo "════════════════════════════════════════════════"
-
-zeldarose transformer \
-    --tokenizer facebook/m2m100_418M \
-    --pretrained-model output/step2_termofis \
-    --config config_step3_ocr.toml \
-    --out-dir output/step3_ocr \
-    --val-text data/step3_ocr/dev.jsonl \
-    data/step3_ocr/train.jsonl
-
-echo ""
-echo "✅ Pipeline complet terminé. Modèle final dans output/step3_ocr/"
+echo "Entraînement terminé."
+echo "Modèle et données dans : $OUT_DIR"
