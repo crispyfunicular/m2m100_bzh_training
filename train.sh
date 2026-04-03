@@ -40,6 +40,8 @@ done
 
 export HF_HOME="/home/mpellissier/.cache/huggingface"
 export TRANSFORMERS_CACHE="/home/mpellissier/.cache/huggingface/hub"
+# Réduit la fragmentation mémoire GPU (recommandé par PyTorch pour les erreurs OOM)
+export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
 
 # ── Résumé ────────────────────────────────────────────────────────────────────
 

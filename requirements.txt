@@ -1,0 +1,18 @@
+# requirements.txt — m2m100_bzh_training
+# Installation : pip install -r requirements.txt
+
+# ── Entraînement ──────────────────────────────────────────────────────────────
+
+# Framework de fine-tuning de transformers (wrappeur PyTorch Lightning)
+zeldarose>=0.13.0
+
+# Tokenizer SentencePiece requis par M2M100Tokenizer
+sentencepiece
+
+# ── Évaluation ────────────────────────────────────────────────────────────────
+
+# Métriques de traduction (chrF2, BLEU)
+sacrebleu
+
+# Chargement de Flores-200 depuis HuggingFace (evaluate.py)
+datasets

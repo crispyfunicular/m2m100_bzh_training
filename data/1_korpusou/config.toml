@@ -14,8 +14,8 @@ target_langs = ["fr"]
 strict_langs = false
 
 [tuning]
-# Nombre de phrases par batch (réduit car phrases longues)
-batch_size = 32
+# Réduit à 16 pour tenir dans la VRAM (M2M100-418M + max_input_length=256 ≈ 31 Go)
+batch_size = 16
 # Taux d'apprentissage typique pour fine-tuning de transformer pré-entraîné
 learning_rate = 5e-5
 # Norme maximale du gradient pour éviter les explosions (seq2seq)
