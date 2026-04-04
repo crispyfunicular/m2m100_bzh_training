@@ -102,6 +102,8 @@ def main():
     parser.add_argument("output_dir", type=pathlib.Path,
                         help="Dossier de sortie de l'entraînement.")
     parser.add_argument("--batch-size", type=int, default=8, dest="batch_size")
+    parser.add_argument("--eval-file", default="dev.jsonl", dest="eval_file",
+                        help="Fichier à évaluer (défaut : dev.jsonl).")
     args = parser.parse_args()
 
     output_dir = args.output_dir.resolve()
@@ -114,9 +116,9 @@ def main():
         print(f"Erreur : aucun modèle trouvé dans {output_dir}", file=sys.stderr)
         sys.exit(1)
 
-    dev_path = output_dir / "dev.jsonl"
+    dev_path = output_dir / args.eval_file
     if not dev_path.exists():
-        print(f"Erreur : dev.jsonl introuvable dans {output_dir}", file=sys.stderr)
+        print(f"Erreur : {args.eval_file} introuvable dans {output_dir}", file=sys.stderr)
         sys.exit(1)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -138,7 +140,7 @@ def main():
         "model_dir":  str(output_dir),
         "model_name": output_dir.name,
         "language":   "br→fr",
-        "eval_set":   "dev.jsonl",
+        "eval_set":   args.eval_file,
         "n_pairs":    len(pairs),
         "timestamp":  datetime.datetime.now().isoformat(timespec="seconds"),
         "chrf2":      chrf2,
