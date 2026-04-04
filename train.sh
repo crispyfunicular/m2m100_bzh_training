@@ -69,6 +69,7 @@ zeldarose transformer \
 cp "$CORPUS_DIR/config.toml"  "$OUT_DIR/config.toml"
 cp "$CORPUS_DIR/train.jsonl"  "$OUT_DIR/train.jsonl"
 cp "$CORPUS_DIR/dev.jsonl"    "$OUT_DIR/dev.jsonl"
+[[ -f "$CORPUS_DIR/test.jsonl" ]] && cp "$CORPUS_DIR/test.jsonl" "$OUT_DIR/test.jsonl"
 
 echo ""
 echo "Entraînement terminé."
