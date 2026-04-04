@@ -2,3 +2,8 @@ venv/
 __pycache__/
 output/
 .DS_Store
+
+# Caches intermédiaires HuggingFace datasets générés par zeldarose
+data/*/train_set/
+data/*/val_set/
+data/*/data_set/
