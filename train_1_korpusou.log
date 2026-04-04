@@ -1,0 +1,106 @@
+nohup: les entrées sont ignorées
+
+════════════════════════════════════════════════
+  Corpus   : data/1_korpusou
+  Modèle   : facebook/m2m100_418M
+  Sortie   : output/1_korpusou
+════════════════════════════════════════════════
+
+/home/mpellissier/m2m100_bzh_training/venv/lib/python3.10/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+[zeldarose] 2026-04-03T20:49:36 INFO  Saving environement info in 
+/home/mpellissier/m2m100_bzh_training/output/1_korpusou.
+[zeldarose] 2026-04-03T20:49:36 INFO  Using random seed 2713
+[zeldarose] 2026-04-03T20:49:36 INFO  (lightning_fabric) Seed set to 2713
+[zeldarose] 2026-04-03T20:49:36 INFO  Training on a total of 1 devices.
+[zeldarose] 2026-04-03T20:49:36 INFO  Using 1 steps gradient accumulation.
+[zeldarose] 2026-04-03T20:49:36 INFO  Loading pretrained tokenizer 
+facebook/m2m100_418M
+[zeldarose] 2026-04-03T20:49:37 INFO  Loading pretrained model 
+'facebook/m2m100_418M'
+[zeldarose] 2026-04-03T20:49:38 WARNING  No mask token in pretrained tokenizer, 
+adding one.
+[zeldarose] 2026-04-03T20:49:39 INFO  Creating mBART training model
+[zeldarose] 2026-04-03T20:49:39 INFO  mBART trainer config: batch_size=16 
+betas=(0.9, 0.98) epsilon=1e-08 gradient_clipping=1.0 learning_rate=5e-05 
+lr_decay_steps=None max_epochs=20 max_input_length=256 max_steps=None 
+warmup_steps=200 weight_decay=None
+[zeldarose] 2026-04-03T20:49:39 INFO  mBART task config: change_ratio=0.3 
+denoise_langs=[] denoise_loss_ratio=0.0 poisson_lambda=3.0 source_langs=['br'] 
+target_langs=['fr'] strict_langs=False
+[zeldarose] 2026-04-03T20:49:39 INFO  Creating data modules
+[zeldarose] 2026-04-03T20:49:39 INFO  Creating trainer
+[zeldarose] 2026-04-03T20:49:39 INFO  Training the model on 1 devices
+[zeldarose] 2026-04-03T20:49:39 INFO  (lightning.pytorch) 💡 Tip: For seamless 
+cloud uploads and versioning, try installing 
+(https://pypi.org/project/litmodels/) to enable LitModelCheckpoint, which syncs 
+automatically with the Lightning model registry.
+[zeldarose] 2026-04-03T20:49:39 INFO  (lightning.pytorch) GPU available: True 
+(cuda), used: True
+[zeldarose] 2026-04-03T20:49:39 INFO  (lightning.pytorch) TPU available: False, 
+using: 0 TPU cores
+[zeldarose] 2026-04-03T20:49:39 INFO  (lightning.pytorch) 
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be 
+used..
+[zeldarose] 2026-04-03T20:49:39 INFO  Start training
+[zeldarose] 2026-04-03T20:49:39 INFO  (lightning.pytorch) You are using a CUDA 
+device ('NVIDIA RTX 5000 Ada Generation') that has Tensor Cores. To properly 
+utilize them, you should set `torch.set_float32_matmul_precision('medium' | 
+'high')` which will trade-off precision for performance. For more details, read 
+https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.htm
+l#torch.set_float32_matmul_precision
+[zeldarose] 2026-04-03T20:49:39 INFO  Loading data from 
+data/1_korpusou/train.jsonl
+[zeldarose] 2026-04-03T20:49:39 INFO  Preprocessing dataset
+[zeldarose] 2026-04-03T20:49:39 INFO  Saving dataset to 
+data/1_korpusou/train_set
+Saving the dataset (0/1 shards):   0%|          | 0/106987 [00:00<?, ? examples/s]Saving the dataset (1/1 shards): 100%|██████████| 106987/106987 [00:00<00:00, 1004171.22 examples/s]Saving the dataset (1/1 shards): 100%|██████████| 106987/106987 [00:00<00:00, 1002784.42 examples/s]
+[zeldarose] 2026-04-03T20:49:39 INFO  Loading data from 
+data/1_korpusou/dev.jsonl
+[zeldarose] 2026-04-03T20:49:39 INFO  Preprocessing dataset
+[zeldarose] 2026-04-03T20:49:39 INFO  Saving dataset to data/1_korpusou/val_set
+Saving the dataset (0/1 shards):   0%|          | 0/5943 [00:00<?, ? examples/s]Saving the dataset (1/1 shards): 100%|██████████| 5943/5943 [00:00<00:00, 707503.08 examples/s]Saving the dataset (1/1 shards): 100%|██████████| 5943/5943 [00:00<00:00, 699207.54 examples/s]
+[zeldarose] 2026-04-03T20:49:39 INFO  (pytorch_lightning) LOCAL_RANK: 0 - 
+CUDA_VISIBLE_DEVICES: [0]
+┏━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┓
+┃   ┃ Name  ┃ Type                           ┃ Params ┃ Mode  ┃
+┡━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━┩
+│ 0 │ model │ M2M100ForConditionalGeneration │  483 M │ train │
+└───┴───────┴────────────────────────────────┴────────┴───────┘
+Trainable params: 483 M                                                         
+Non-trainable params: 0                                                         
+Total params: 483 M                                                             
+Total estimated model params size (MB): 1.9 K                                   
+Modules in train mode: 348                                                      
+Modules in eval mode: 0                                                         
+[zeldarose] 2026-04-03T20:49:40 WARNING  
+/home/mpellissier/m2m100_bzh_training/venv/lib/python3.10/site-packages/pytorch_
+lightning/trainer/connectors/data_connector.py:433: The 'val_dataloader' does 
+not have many workers which may be a bottleneck. Consider increasing the value 
+of the `num_workers` argument` to `num_workers=31` in the `DataLoader` to 
+improve performance.
+[zeldarose] 2026-04-03T20:49:40 WARNING  
+/home/mpellissier/m2m100_bzh_training/venv/lib/python3.10/site-packages/pytorch_
+lightning/trainer/connectors/data_connector.py:433: The 'train_dataloader' does 
+not have many workers which may be a bottleneck. Consider increasing the value 
+of the `num_workers` argument` to `num_workers=31` in the `DataLoader` to 
+improve performance.
+[zeldarose] 2026-04-04T04:52:28 INFO  (lightning.pytorch) `Trainer.fit` stopped:
+`max_epochs=20` reached.
+Epoch 19/19 ━━━━━━━━━━━━━━━━━━━━━━ 6687/6687 0:23:23 • 0:00:00 4.80it/s v_num: 1
+[zeldarose] 2026-04-04T04:52:30 INFO  Saving the final model in 
+/home/mpellissier/m2m100_bzh_training/output/1_korpusou/muppet
+[zeldarose] 2026-04-04T04:52:30 INFO  Saving model to 
+/home/mpellissier/m2m100_bzh_training/output/1_korpusou/muppet
+[zeldarose] 2026-04-04T04:52:30 WARNING  
+/home/mpellissier/m2m100_bzh_training/venv/lib/python3.10/site-packages/transfor
+mers/modeling_utils.py:3922: UserWarning: Moving the following attributes in the
+config to the generation config: {'max_length': 200, 'early_stopping': True, 
+'num_beams': 5}. You are seeing this warning because you've set generation 
+parameters in the model config, as opposed to in the generation config.
+  warnings.warn(
+[zeldarose] 2026-04-04T04:52:32 INFO  Saving tokenizer to 
+/home/mpellissier/m2m100_bzh_training/output/1_korpusou/muppet
+
+Entraînement terminé.
+Modèle et données dans : output/1_korpusou
